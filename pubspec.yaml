@@ -1,0 +1,25 @@
+name: map_picker
+description: Pick area or point from Google Maps
+version: 0.0.1
+author: Luis Barba
+homepage: https://lymtechx.com/
+
+environment:
+  sdk: ">=2.3.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  flutter_google_places: ^0.2.4
+  google_maps_flutter: ^0.5.25
+  google_maps_utils: ^1.2.0+3
+  location: ^2.3.5
+  geocoder: ^0.2.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
