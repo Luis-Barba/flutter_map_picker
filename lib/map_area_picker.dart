@@ -1,5 +1,3 @@
-library map_picker;
-
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
@@ -219,7 +217,7 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
 
     List<LatLng> _simplify(List<LatLng> coordinates){
       List<Point> points = coordinates.map((latLng) => Point(latLng.latitude, latLng.longitude)).toList();
-      List<Point> simplifiedPoints = PolyUtils.simplify(points, 100);//todo
+      List<Point> simplifiedPoints = PolyUtils.simplify(points, 100); //todo
       return simplifiedPoints.map((p) => LatLng(p.x, p.y)).toList();
     }
 

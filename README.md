@@ -1,8 +1,10 @@
-# map_picker
+# flutter_map_picker
 
 Pick an area or a place on google maps
 
 ## Getting Started
+
+Follow the steps to integrate Google Maps (https://pub.dev/packages/google_maps_flutter)
 
 ### Pick area
 
