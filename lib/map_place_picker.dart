@@ -8,8 +8,7 @@ import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart' as $;
 
-class PlacePickerResult{
-
+class PlacePickerResult {
   LatLng latLng;
   String address;
 
@@ -22,39 +21,37 @@ class PlacePickerResult{
 }
 
 class PlacePickerScreen extends StatefulWidget {
-
   final String googlePlacesApiKey;
   final LatLng initialPosition;
   final Color mainColor;
 
-  const PlacePickerScreen({Key key,
-    @required this.googlePlacesApiKey,
-    @required this.initialPosition,
-    @required this.mainColor
-  }) : super(key: key);
+  const PlacePickerScreen(
+      {Key key,
+      @required this.googlePlacesApiKey,
+      @required this.initialPosition,
+      @required this.mainColor})
+      : super(key: key);
 
   @override
   State<PlacePickerScreen> createState() => PlacePickerScreenState(
-    googlePlacesApiKey: googlePlacesApiKey,
-    initialPosition: initialPosition,
-    mainColor: mainColor
-  );
+      googlePlacesApiKey: googlePlacesApiKey,
+      initialPosition: initialPosition,
+      mainColor: mainColor);
 }
 
 class PlacePickerScreenState extends State<PlacePickerScreen> {
-
   final String googlePlacesApiKey;
   final LatLng initialPosition;
   final Color mainColor;
 
-  PlacePickerScreenState({
-    @required this.googlePlacesApiKey,
-    @required this.initialPosition,
-    @required this.mainColor
-  }){
+  PlacePickerScreenState(
+      {@required this.googlePlacesApiKey,
+      @required this.initialPosition,
+      @required this.mainColor}) {
     centerCamera = LatLng(initialPosition.latitude, initialPosition.longitude);
     zoomCamera = 16;
-    selectedLatLng = LatLng(initialPosition.latitude, initialPosition.longitude);
+    selectedLatLng =
+        LatLng(initialPosition.latitude, initialPosition.longitude);
 
     _places = GoogleMapsPlaces(apiKey: googlePlacesApiKey);
   }
@@ -82,9 +79,8 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
 
   ///BASIC
   _moveCamera(LatLng latLng, double zoom) async {
-    googleMapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-        target: latLng,
-        zoom: zoom)));
+    googleMapController.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(target: latLng, zoom: zoom)));
   }
 
   Future<$.LocationData> _getLocation() async {
@@ -99,14 +95,16 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
       locationData = null;
     }
 
-    if(locationData!=null) myLocation = LatLng(locationData.latitude, locationData.longitude);
+    if (locationData != null)
+      myLocation = LatLng(locationData.latitude, locationData.longitude);
 
     return locationData;
   }
 
   Future<Address> _reverseGeocoding(double lat, double lng) async {
     final coordinates = new Coordinates(lat, lng);
-    var addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    var addresses =
+        await Geocoder.local.findAddressesFromCoordinates(coordinates);
     var first = addresses.first;
     print("${first.featureName} : ${first.addressLine}");
     return first;
@@ -114,7 +112,6 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     _setSelectedAddress(LatLng latLng, String address) async {
       setState(() {
         selectedAddress = address;
@@ -125,10 +122,11 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
     ///GO TO
     _searchPlace() async {
       var location;
-      if(myLocation!=null){
+      if (myLocation != null) {
         location = Location(myLocation.latitude, myLocation.longitude);
-      }else{
-        location = Location(initialPosition.latitude, initialPosition.longitude);
+      } else {
+        location =
+            Location(initialPosition.latitude, initialPosition.longitude);
       }
       Prediction p = await PlacesAutocomplete.show(
         context: context,
@@ -141,19 +139,20 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
 
       if (p != null) {
         // get detail (lat/lng)
-        PlacesDetailsResponse detail = await _places.getDetailsByPlaceId(p.placeId);
+        PlacesDetailsResponse detail =
+            await _places.getDetailsByPlaceId(p.placeId);
         final lat = detail.result.geometry.location.lat;
         final lng = detail.result.geometry.location.lng;
 
         var latLng = LatLng(lat, lng);
         var address = p.description;
 
-        CameraPosition newPosition = CameraPosition(
-            target: latLng,
-            zoom: _defaultZoom);
+        CameraPosition newPosition =
+            CameraPosition(target: latLng, zoom: _defaultZoom);
 
         ignoreGeocoding = true;
-        googleMapController.animateCamera(CameraUpdate.newCameraPosition(newPosition));
+        googleMapController
+            .animateCamera(CameraUpdate.newCameraPosition(newPosition));
 
         _setSelectedAddress(latLng, address);
       }
@@ -161,13 +160,13 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
 
     _goToMyLocation() async {
       await _getLocation();
-      if(myLocation != null) {
+      if (myLocation != null) {
         _moveCamera(myLocation, _defaultZoom);
       }
     }
 
     ///WIDGETS
-    Widget _mapButtons(){
+    Widget _mapButtons() {
       return Padding(
         padding: EdgeInsets.only(top: 40, left: 8, right: 8),
         child: Column(
@@ -175,8 +174,11 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
             FloatingActionButton(
               heroTag: "FAB_SEARCH_PLACE",
               backgroundColor: Colors.white,
-              child: Icon(Icons.search, color: Colors.black,),
-              onPressed: (){
+              child: Icon(
+                Icons.search,
+                color: Colors.black,
+              ),
+              onPressed: () {
                 _searchPlace();
               },
             ),
@@ -185,7 +187,10 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
               child: FloatingActionButton(
                 heroTag: "FAB_LOCATION",
                 backgroundColor: Colors.white,
-                child: Icon(Icons.my_location, color: Colors.black,),
+                child: Icon(
+                  Icons.my_location,
+                  color: Colors.black,
+                ),
                 onPressed: () {
                   _goToMyLocation();
                 },
@@ -214,36 +219,36 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
                   onMapCreated: (GoogleMapController controller) {
                     googleMapController = controller;
                   },
-                  onTap: (latLng){
-                    CameraPosition newPosition = CameraPosition(
-                        target: latLng,
-                        zoom: _defaultZoom);
-                    googleMapController.animateCamera(CameraUpdate.newCameraPosition(newPosition));
+                  onTap: (latLng) {
+                    CameraPosition newPosition =
+                        CameraPosition(target: latLng, zoom: _defaultZoom);
+                    googleMapController.animateCamera(
+                        CameraUpdate.newCameraPosition(newPosition));
                   },
-                  onCameraMoveStarted: (){
+                  onCameraMoveStarted: () {
                     setState(() {
                       movingCamera = true;
                     });
                   },
-                  onCameraMove: (position){
+                  onCameraMove: (position) {
                     centerCamera = position.target;
                     zoomCamera = position.zoom;
                   },
-                  onCameraIdle: () async{
-
-                    if(ignoreGeocoding){
+                  onCameraIdle: () async {
+                    if (ignoreGeocoding) {
                       ignoreGeocoding = false;
                       setState(() {
                         movingCamera = false;
                       });
-
-                    }else{
+                    } else {
                       setState(() {
                         movingCamera = false;
                         loadingAddress = true;
                       });
 
-                      var address = (await _reverseGeocoding(centerCamera.latitude, centerCamera.longitude)).addressLine;
+                      var address = (await _reverseGeocoding(
+                              centerCamera.latitude, centerCamera.longitude))
+                          .addressLine;
                       loadingAddress = false;
 
                       _setSelectedAddress(centerCamera, address);
@@ -254,7 +259,11 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
                 Center(
                   child: Container(
                     padding: EdgeInsets.only(bottom: 60),
-                    child: Icon(Icons.location_on, size: 60, color: mainColor,),
+                    child: Icon(
+                      Icons.location_on,
+                      size: 60,
+                      color: mainColor,
+                    ),
                   ),
                 ),
               ],
@@ -267,9 +276,15 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
                   padding: EdgeInsets.only(top: 8, bottom: 8),
                   child: ListTile(
                     title: Text("Dirección"),
-                    subtitle: selectedAddress==null? Text("Desplaza el mapa para seleccionar una ubicación, o dale a buscar")
+                    subtitle: selectedAddress == null
+                        ? Text(
+                            "Desplaza el mapa para seleccionar una ubicación, o dale a buscar")
                         : Text(selectedAddress),
-                    trailing: loadingAddress? CircularProgressIndicator(backgroundColor: mainColor,) : null,
+                    trailing: loadingAddress
+                        ? CircularProgressIndicator(
+                            backgroundColor: mainColor,
+                          )
+                        : null,
                   ),
                 ),
                 Padding(
@@ -280,35 +295,37 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
                         width: 160,
                         padding: EdgeInsets.only(right: 16),
                         child: FlatButton(
-                          onPressed: (){
-
+                          onPressed: () {
                             Navigator.pop(context);
-
                           },
                           child: Text("Cancelar"),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0),
-                              side: BorderSide(color: mainColor)
-                          ),
+                              side: BorderSide(color: mainColor)),
                         ),
                       ),
                       Expanded(
                         child: FlatButton(
-                          onPressed: !movingCamera && !loadingAddress && selectedAddress!=null? (){
+                          onPressed: !movingCamera &&
+                                  !loadingAddress &&
+                                  selectedAddress != null
+                              ? () {
+                                  PlacePickerResult result = PlacePickerResult(
+                                      selectedLatLng, selectedAddress);
+                                  print(result);
 
-                            PlacePickerResult result = PlacePickerResult(selectedLatLng, selectedAddress);
-                            print(result);
-
-                            Navigator.pop(context, result);
-
-                          } : null,
-                          child: Text("Seleccionar dirección", style: TextStyle(color: Colors.white),),
+                                  Navigator.pop(context, result);
+                                }
+                              : null,
+                          child: Text(
+                            "Seleccionar dirección",
+                            style: TextStyle(color: Colors.white),
+                          ),
                           color: mainColor,
                           disabledColor: Colors.grey[350],
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0),
-                              side: BorderSide(color: mainColor)
-                          ),
+                              side: BorderSide(color: mainColor)),
                         ),
                       ),
                     ],

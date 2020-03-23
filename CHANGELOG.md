@@ -1,3 +1,6 @@
-## [0.0.1] - TODO: Add release date.
+## [0.0.1] - 23/03/2020.
+- Initial release
 
-Initial release
+## [0.1.0] - 23/03/2020.
+- Update version & description
+

@@ -9,13 +9,13 @@ import 'package:google_maps_webservice/places.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart' as $;
 
-class AreaPickerResult{
-
+class AreaPickerResult {
   LatLng selectedLatLng;
   double radiusInMeters;
   List<LatLng> polygonPoints;
 
-  AreaPickerResult(this.selectedLatLng, this.radiusInMeters, this.polygonPoints);
+  AreaPickerResult(
+      this.selectedLatLng, this.radiusInMeters, this.polygonPoints);
 
   @override
   String toString() {
@@ -24,7 +24,6 @@ class AreaPickerResult{
 }
 
 class AreaPickerScreen extends StatefulWidget {
-
   final String markerAsset;
   final Color mainColor;
 
@@ -36,18 +35,28 @@ class AreaPickerScreen extends StatefulWidget {
   final List<LatLng> initialPolygon;
   final bool enableFreeDraw;
 
-  AreaPickerScreen({Key key,
-    this.markerAsset,
-    this.mainColor = Colors.cyan,
-
-    @required this.googlePlacesApiKey,
-    @required this.initialPosition,
-    this.distanceSteps = const [1000,5000,10000,20000,40000,80000,160000,320000,640000],
-    this.zoomSteps = const [14,12,11,10,9,8,7,6,5],
-    this.initialStepIndex = 1,
-    this.initialPolygon = const [],
-    this.enableFreeDraw = true
-  }) : super(key: key);
+  AreaPickerScreen(
+      {Key key,
+      this.markerAsset,
+      this.mainColor = Colors.cyan,
+      @required this.googlePlacesApiKey,
+      @required this.initialPosition,
+      this.distanceSteps = const [
+        1000,
+        5000,
+        10000,
+        20000,
+        40000,
+        80000,
+        160000,
+        320000,
+        640000
+      ],
+      this.zoomSteps = const [14, 12, 11, 10, 9, 8, 7, 6, 5],
+      this.initialStepIndex = 1,
+      this.initialPolygon = const [],
+      this.enableFreeDraw = true})
+      : super(key: key);
 
   @override
   _AreaPickerScreenState createState() => _AreaPickerScreenState(
@@ -59,12 +68,10 @@ class AreaPickerScreen extends StatefulWidget {
       distanceSteps: distanceSteps,
       initialStepIndex: initialStepIndex,
       initialPolygon: initialPolygon,
-      enableFreeDraw: enableFreeDraw
-  );
+      enableFreeDraw: enableFreeDraw);
 }
 
 class _AreaPickerScreenState extends State<AreaPickerScreen> {
-
   final String markerAsset;
   final Color mainColor;
 
@@ -76,21 +83,20 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
   final List<LatLng> initialPolygon;
   final bool enableFreeDraw;
 
-  _AreaPickerScreenState({
-    @required this.markerAsset,
-    @required this.mainColor,
-    @required this.googlePlacesApiKey,
-    @required this.initialPosition,
-    @required this.initialStepIndex,
-    @required this.distanceSteps,
-    @required this.zoomSteps,
-    @required this.initialPolygon,
-    @required this.enableFreeDraw
-  }){
-
+  _AreaPickerScreenState(
+      {@required this.markerAsset,
+      @required this.mainColor,
+      @required this.googlePlacesApiKey,
+      @required this.initialPosition,
+      @required this.initialStepIndex,
+      @required this.distanceSteps,
+      @required this.zoomSteps,
+      @required this.initialPolygon,
+      @required this.enableFreeDraw}) {
     centerCamera = LatLng(initialPosition.latitude, initialPosition.longitude);
     zoomCamera = zoomSteps[initialStepIndex];
-    selectedLatLng = LatLng(initialPosition.latitude, initialPosition.longitude);
+    selectedLatLng =
+        LatLng(initialPosition.latitude, initialPosition.longitude);
     radiusInMeters = distanceSteps[initialStepIndex];
     polygonPoints = initialPolygon;
 
@@ -120,12 +126,10 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
 
   bool drawing = false;
 
-
   ///BASIC
   _moveCamera(LatLng latLng, double zoom) async {
-    googleMapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-        target: latLng,
-        zoom: zoom)));
+    googleMapController.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(target: latLng, zoom: zoom)));
   }
 
   Future<$.LocationData> _getLocation() async {
@@ -140,16 +144,17 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
       locationData = null;
     }
 
-    if(locationData!=null) myLocation = LatLng(locationData.latitude, locationData.longitude);
+    if (locationData != null)
+      myLocation = LatLng(locationData.latitude, locationData.longitude);
 
     return locationData;
   }
 
   @override
   void initState() {
-    if(markerAsset != null){
+    if (markerAsset != null) {
       BitmapDescriptor.fromAssetImage(
-          ImageConfiguration(size: Size(30, 30)), markerAsset)
+              ImageConfiguration(size: Size(30, 30)), markerAsset)
           .then((onValue) {
         setState(() {
           iconSelectedLocation = onValue;
@@ -161,12 +166,11 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     ///MAP ELEMENTS
-    _getMarkers(){
+    _getMarkers() {
       Set<Marker> markers = {};
 
-      if(drawing || polygonPoints.length > 0) return markers;
+      if (drawing || polygonPoints.length > 0) return markers;
 
       markers.add(Marker(
         markerId: MarkerId("selected_position"),
@@ -177,11 +181,11 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
       return markers;
     }
 
-    _getCircles(){
+    _getCircles() {
       Set<Circle> circles = {};
-      if(drawing || polygonPoints.length > 0) return circles;
+      if (drawing || polygonPoints.length > 0) return circles;
 
-      if(selectedLatLng != null && radiusInMeters != null){
+      if (selectedLatLng != null && radiusInMeters != null) {
         circles.add(Circle(
           circleId: CircleId('circle_radius'),
           fillColor: mainColor.withOpacity(0.2),
@@ -193,10 +197,10 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
       return circles;
     }
 
-    _getPolygons(){
+    _getPolygons() {
       Set<Polygon> polygons = {};
-      if(polygonPoints != null && polygonPoints.length > 0){
-        polygons .add(Polygon(
+      if (polygonPoints != null && polygonPoints.length > 0) {
+        polygons.add(Polygon(
           polygonId: PolygonId("polygon_area"),
           visible: true,
           points: polygonPoints,
@@ -204,36 +208,39 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
           strokeWidth: 3,
         ));
       }
-      return polygons ;
+      return polygons;
     }
 
-
     ///MAP DRAW
-    _removeCustomArea(){
+    _removeCustomArea() {
       setState(() {
         polygonPoints = [];
       });
     }
 
-    List<LatLng> _simplify(List<LatLng> coordinates){
-      List<Point> points = coordinates.map((latLng) => Point(latLng.latitude, latLng.longitude)).toList();
+    List<LatLng> _simplify(List<LatLng> coordinates) {
+      List<Point> points = coordinates
+          .map((latLng) => Point(latLng.latitude, latLng.longitude))
+          .toList();
       List<Point> simplifiedPoints = PolyUtils.simplify(points, 100); //todo
       return simplifiedPoints.map((p) => LatLng(p.x, p.y)).toList();
     }
 
     _onDrawPolygon(List<DrawingPoints> points) async {
-      final devicePixelRatio = Platform.isAndroid
-          ? MediaQuery.of(context).devicePixelRatio
-          : 1.0;
+      final devicePixelRatio =
+          Platform.isAndroid ? MediaQuery.of(context).devicePixelRatio : 1.0;
 
       Future<LatLng> _getLatLngFromScreenCoordinate(double x, double y) async {
-        ScreenCoordinate screenCoordinate = ScreenCoordinate(x: (x*devicePixelRatio).round(), y: (y*devicePixelRatio).round());
+        ScreenCoordinate screenCoordinate = ScreenCoordinate(
+            x: (x * devicePixelRatio).round(),
+            y: (y * devicePixelRatio).round());
         return await googleMapController.getLatLng(screenCoordinate);
       }
 
       List<LatLng> latLngPoints = [];
-      for(var p in points){
-        var currentLatLng = await _getLatLngFromScreenCoordinate(p.points.dx, p.points.dy);
+      for (var p in points) {
+        var currentLatLng =
+            await _getLatLngFromScreenCoordinate(p.points.dx, p.points.dy);
         latLngPoints.add(currentLatLng);
       }
 
@@ -243,16 +250,15 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
       });
     }
 
-    _initFreeDraw(){
+    _initFreeDraw() {
       _removeCustomArea();
       setState(() {
         drawing = true;
       });
     }
 
-    Widget _circleRadiusWidget(){
-
-      return  Container(
+    Widget _circleRadiusWidget() {
+      return Container(
         height: 90,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -261,7 +267,7 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
               min: 0,
               max: (distanceSteps.length - 1).toDouble(),
               divisions: distanceSteps.length - 1,
-              onChanged: (value){
+              onChanged: (value) {
                 setState(() {
                   radiusInMeters = distanceSteps[value.floor()];
                   _moveCamera(selectedLatLng, zoomSteps[value.floor()]);
@@ -280,9 +286,8 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
       );
     }
 
-    Widget _polygonEditorWidget(){
-
-      if(drawing){
+    Widget _polygonEditorWidget() {
+      if (drawing) {
         return Container(
           height: 90,
           alignment: Alignment.center,
@@ -315,7 +320,7 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
             title: Text("Área personalizada"),
             trailing: FlatButton(
               child: Text("Eliminar"),
-              onPressed: (){
+              onPressed: () {
                 _removeCustomArea();
               },
             ),
@@ -324,13 +329,12 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
       );
     }
 
-    _selectCenterCircle(LatLng latLng){
+    _selectCenterCircle(LatLng latLng) {
       setState(() {
         selectedLatLng = latLng;
         _moveCamera(latLng, zoomCamera);
       });
     }
-
 
     ///GO TO
     _goToPlace() async {
@@ -341,35 +345,36 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
           apiKey: googlePlacesApiKey,
           mode: Mode.fullscreen,
           language: "es",
-          location: myLocation != null? Location(myLocation.latitude, myLocation.longitude) : null
-      );
+          location: myLocation != null
+              ? Location(myLocation.latitude, myLocation.longitude)
+              : null);
 
       if (p != null) {
-        PlacesDetailsResponse detail = await _places.getDetailsByPlaceId(p.placeId);
+        PlacesDetailsResponse detail =
+            await _places.getDetailsByPlaceId(p.placeId);
         final lat = detail.result.geometry.location.lat;
         final lng = detail.result.geometry.location.lng;
 
         double zoom = zoomSteps[distanceSteps.indexOf(radiusInMeters)];
-        CameraPosition newPosition = CameraPosition(
-            target: LatLng(lat, lng),
-            zoom: zoom);
+        CameraPosition newPosition =
+            CameraPosition(target: LatLng(lat, lng), zoom: zoom);
 
-        googleMapController.animateCamera(CameraUpdate.newCameraPosition(newPosition));
+        googleMapController
+            .animateCamera(CameraUpdate.newCameraPosition(newPosition));
         _selectCenterCircle(LatLng(lat, lng));
       }
     }
 
     _goToMyLocation() async {
       await _getLocation();
-      if(myLocation != null) {
+      if (myLocation != null) {
         _moveCamera(myLocation, zoomCamera);
         _selectCenterCircle(myLocation);
       }
     }
 
-
     ///WIDGETS
-    Widget _mapButtons(){
+    Widget _mapButtons() {
       return Padding(
         padding: EdgeInsets.only(top: 40, left: 8, right: 8),
         child: Column(
@@ -377,8 +382,11 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
             FloatingActionButton(
               heroTag: "FAB_SEARCH_PLACE",
               backgroundColor: Colors.white,
-              child: Icon(Icons.search, color: Colors.black,),
-              onPressed: (){
+              child: Icon(
+                Icons.search,
+                color: Colors.black,
+              ),
+              onPressed: () {
                 _goToPlace();
               },
             ),
@@ -387,28 +395,34 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
               child: FloatingActionButton(
                 heroTag: "FAB_LOCATION",
                 backgroundColor: Colors.white,
-                child: Icon(Icons.my_location, color: Colors.black,),
+                child: Icon(
+                  Icons.my_location,
+                  color: Colors.black,
+                ),
                 onPressed: () {
                   _goToMyLocation();
                 },
               ),
             ),
-            if(enableFreeDraw) FloatingActionButton(
-              heroTag: "FAB_DRAW",
-              backgroundColor: Colors.white,
-              child: Icon(Icons.mode_edit, color: Colors.black,),
-              onPressed: (){
-                _initFreeDraw();
-              },
-            ),
+            if (enableFreeDraw)
+              FloatingActionButton(
+                heroTag: "FAB_DRAW",
+                backgroundColor: Colors.white,
+                child: Icon(
+                  Icons.mode_edit,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  _initFreeDraw();
+                },
+              ),
           ],
         ),
       );
     }
 
-
-    Future<bool> _onBackPressed() async{
-      if(drawing){
+    Future<bool> _onBackPressed() async {
+      if (drawing) {
         drawing = false;
         _removeCustomArea();
         return false;
@@ -436,10 +450,10 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
                     onMapCreated: (GoogleMapController controller) {
                       googleMapController = controller;
                     },
-                    onTap: (latLng){
+                    onTap: (latLng) {
                       _selectCenterCircle(latLng);
                     },
-                    onCameraMove: (position){
+                    onCameraMove: (position) {
                       centerCamera = position.target;
                       zoomCamera = position.zoom;
                     },
@@ -447,15 +461,20 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
                     markers: _getMarkers(),
                     polygons: _getPolygons(),
                   ),
-                  if(!drawing) _mapButtons(),
-                  if(drawing) Draw(onDrawEnd: _onDrawPolygon,),
+                  if (!drawing) _mapButtons(),
+                  if (drawing)
+                    Draw(
+                      onDrawEnd: _onDrawPolygon,
+                    ),
                 ],
               ),
             ),
             Container(
               child: Column(
                 children: <Widget>[
-                  drawing || polygonPoints.length > 0? _polygonEditorWidget() : _circleRadiusWidget(),
+                  drawing || polygonPoints.length > 0
+                      ? _polygonEditorWidget()
+                      : _circleRadiusWidget(),
                   Padding(
                     padding: EdgeInsets.fromLTRB(8, 0, 8, 8),
                     child: Row(
@@ -464,34 +483,42 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
                           width: 160,
                           padding: EdgeInsets.only(right: 16),
                           child: FlatButton(
-                            onPressed: !drawing? (){
-
-                              Navigator.pop(context);
-
-                            } : null,
+                            onPressed: !drawing
+                                ? () {
+                                    Navigator.pop(context);
+                                  }
+                                : null,
                             child: Text("Cancelar"),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(18.0),
-                                side: BorderSide(color: !drawing? mainColor : Colors.white)
-                            ),
+                                side: BorderSide(
+                                    color:
+                                        !drawing ? mainColor : Colors.white)),
                           ),
                         ),
                         Expanded(
                           child: FlatButton(
-                            onPressed: !drawing? (){
-
-                              AreaPickerResult result = AreaPickerResult(selectedLatLng, radiusInMeters, polygonPoints);
-                              print(result);
-                              Navigator.pop(context, result);
-
-                            } : null,
-                            child: Text("Guardar zona", style: TextStyle(color: Colors.white),),
+                            onPressed: !drawing
+                                ? () {
+                                    AreaPickerResult result = AreaPickerResult(
+                                        selectedLatLng,
+                                        radiusInMeters,
+                                        polygonPoints);
+                                    print(result);
+                                    Navigator.pop(context, result);
+                                  }
+                                : null,
+                            child: Text(
+                              "Guardar zona",
+                              style: TextStyle(color: Colors.white),
+                            ),
                             color: mainColor,
                             disabledColor: Colors.grey[350],
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(18.0),
-                                side: BorderSide(color: !drawing? mainColor : Colors.white)
-                            ),
+                                side: BorderSide(
+                                    color:
+                                        !drawing ? mainColor : Colors.white)),
                           ),
                         ),
                       ],
@@ -510,7 +537,7 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
 }
 
 class Draw extends StatefulWidget {
-  Draw ({@required this.onDrawEnd});
+  Draw({@required this.onDrawEnd});
 
   final Function(List<DrawingPoints>) onDrawEnd;
 
@@ -526,7 +553,6 @@ class _DrawState extends State<Draw> {
   StrokeCap strokeCap = (Platform.isAndroid) ? StrokeCap.butt : StrokeCap.round;
 
   Function(List<DrawingPoints>) onDrawEnd;
-
 
   _DrawState({@required this.onDrawEnd});
 
@@ -558,7 +584,7 @@ class _DrawState extends State<Draw> {
         });
       },
       onPanEnd: (details) {
-        if(onDrawEnd != null) onDrawEnd(points);
+        if (onDrawEnd != null) onDrawEnd(points);
       },
       child: CustomPaint(
         size: Size.infinite,
@@ -570,12 +596,13 @@ class _DrawState extends State<Draw> {
   }
 }
 
-
 ///DRAW
 class DrawingPainter extends CustomPainter {
   DrawingPainter({this.pointsList});
+
   List<DrawingPoints> pointsList;
   List<Offset> offsetPoints = List();
+
   @override
   void paint(Canvas canvas, Size size) {
     for (int i = 0; i < pointsList.length - 1; i++) {
@@ -599,6 +626,7 @@ class DrawingPainter extends CustomPainter {
 class DrawingPoints {
   Paint paint;
   Offset points;
+
   DrawingPoints({this.points, this.paint});
 }
 
