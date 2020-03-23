@@ -3,6 +3,8 @@ description: This package allows you to pick a point, a circle or a custom area 
 version: 0.1.0
 author: Luis Barba <lymtechx@gmail.com>
 homepage: https://lymtechx.com/
+repository: https://github.com/lymtechx/flutter_map_picker
+issue_tracker: https://github.com/lymtechx/flutter_map_picker/issues
 
 environment:
   sdk: ">=2.3.0 <3.0.0"
