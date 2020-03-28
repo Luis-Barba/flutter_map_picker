@@ -1,6 +1,6 @@
 name: flutter_map_picker
 description: This package allows you to pick a point, a circle or a custom area in Google Maps
-version: 0.1.0
+version: 0.1.1
 author: Luis Barba <lymtechx@gmail.com>
 homepage: https://lymtechx.com/
 repository: https://github.com/lymtechx/flutter_map_picker

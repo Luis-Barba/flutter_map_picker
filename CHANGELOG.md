@@ -4,3 +4,6 @@
 ## [0.1.0] - 23/03/2020.
 - Update version & description
 
+## [0.1.1] - 23/03/2020.
+- Add repository
+
