@@ -8,6 +8,8 @@ import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart' as $;
 
+import 'map_picker_strings.dart';
+
 class PlacePickerResult {
   LatLng latLng;
   String address;
@@ -25,18 +27,25 @@ class PlacePickerScreen extends StatefulWidget {
   final LatLng initialPosition;
   final Color mainColor;
 
+  final MapPickerStrings mapStrings;
+  final String placeAutoCompleteLanguage;
+
   const PlacePickerScreen(
       {Key key,
       @required this.googlePlacesApiKey,
       @required this.initialPosition,
-      @required this.mainColor})
+      @required this.mainColor,
+      this.mapStrings,
+      this.placeAutoCompleteLanguage})
       : super(key: key);
 
   @override
   State<PlacePickerScreen> createState() => PlacePickerScreenState(
       googlePlacesApiKey: googlePlacesApiKey,
       initialPosition: initialPosition,
-      mainColor: mainColor);
+      mainColor: mainColor,
+      mapStrings: mapStrings,
+      placeAutoCompleteLanguage: placeAutoCompleteLanguage);
 }
 
 class PlacePickerScreenState extends State<PlacePickerScreen> {
@@ -44,16 +53,24 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
   final LatLng initialPosition;
   final Color mainColor;
 
+  MapPickerStrings strings;
+  String placeAutoCompleteLanguage;
+
   PlacePickerScreenState(
       {@required this.googlePlacesApiKey,
       @required this.initialPosition,
-      @required this.mainColor}) {
+      @required this.mainColor,
+      @required mapStrings,
+      @required placeAutoCompleteLanguage}) {
     centerCamera = LatLng(initialPosition.latitude, initialPosition.longitude);
     zoomCamera = 16;
     selectedLatLng =
         LatLng(initialPosition.latitude, initialPosition.longitude);
 
     _places = GoogleMapsPlaces(apiKey: googlePlacesApiKey);
+
+    this.strings = mapStrings ?? MapPickerStrings.english();
+    this.placeAutoCompleteLanguage = 'en';
   }
 
   GoogleMapsPlaces _places;
@@ -131,10 +148,10 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
       Prediction p = await PlacesAutocomplete.show(
         context: context,
         apiKey: googlePlacesApiKey,
-        mode: Mode.fullscreen, // Mode.fullscreen
-        language: "es",
+        mode: Mode.fullscreen,
+        // Mode.fullscreen
+        language: placeAutoCompleteLanguage,
         location: location,
-        components: [Component(Component.country, "es")],
       );
 
       if (p != null) {
@@ -275,10 +292,9 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
                 Container(
                   padding: EdgeInsets.only(top: 8, bottom: 8),
                   child: ListTile(
-                    title: Text("Dirección"),
+                    title: Text(strings.address),
                     subtitle: selectedAddress == null
-                        ? Text(
-                            "Desplaza el mapa para seleccionar una ubicación, o dale a buscar")
+                        ? Text(strings.firstMessageSelectAddress)
                         : Text(selectedAddress),
                     trailing: loadingAddress
                         ? CircularProgressIndicator(
@@ -298,7 +314,7 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          child: Text("Cancelar"),
+                          child: Text(strings.cancel),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0),
                               side: BorderSide(color: mainColor)),
@@ -318,7 +334,7 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
                                 }
                               : null,
                           child: Text(
-                            "Seleccionar dirección",
+                            strings.selectAddress,
                             style: TextStyle(color: Colors.white),
                           ),
                           color: mainColor,

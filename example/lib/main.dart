@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_map_picker/map_area_picker.dart';
-import 'package:flutter_map_picker/map_place_picker.dart';
+import 'package:flutter_map_picker/map_picker.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'google_places_api_key.dart';
 
@@ -13,7 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Map Picker Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.purple,
       ),
       home: MyHomePage(title: 'Map Picker Demo'),
     );
@@ -43,7 +42,9 @@ class _MyHomePageState extends State<MyHomePage> {
       AreaPickerResult pickerResult = await Navigator.push(context, MaterialPageRoute(builder: (context) =>  AreaPickerScreen(
         googlePlacesApiKey: GOOGLE_PLACES_API_KEY,
         initialPosition: DEFAULT_LAT_LNG,
-        mainColor: Colors.cyan,
+        mainColor: Colors.purple,
+        mapStrings: MapPickerStrings.spanish(),
+        placeAutoCompleteLanguage: 'es',
         markerAsset: 'assets/images/icon_look_area.png',
       )));
 
@@ -56,7 +57,9 @@ class _MyHomePageState extends State<MyHomePage> {
       PlacePickerResult pickerResult = await Navigator.push(context, MaterialPageRoute(builder: (context) =>  PlacePickerScreen(
         googlePlacesApiKey: GOOGLE_PLACES_API_KEY,
         initialPosition: DEFAULT_LAT_LNG,
-        mainColor: Colors.cyan,
+        mainColor: Colors.purple,
+        mapStrings: MapPickerStrings.spanish(),
+        placeAutoCompleteLanguage: 'es',
       )));
 
       setState(() {

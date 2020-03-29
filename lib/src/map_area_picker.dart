@@ -9,6 +9,8 @@ import 'package:google_maps_webservice/places.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart' as $;
 
+import 'map_picker_strings.dart';
+
 class AreaPickerResult {
   LatLng selectedLatLng;
   double radiusInMeters;
@@ -35,6 +37,9 @@ class AreaPickerScreen extends StatefulWidget {
   final List<LatLng> initialPolygon;
   final bool enableFreeDraw;
 
+  final String placeAutoCompleteLanguage; //es || en
+  final MapPickerStrings mapStrings;
+
   AreaPickerScreen(
       {Key key,
       this.markerAsset,
@@ -55,7 +60,9 @@ class AreaPickerScreen extends StatefulWidget {
       this.zoomSteps = const [14, 12, 11, 10, 9, 8, 7, 6, 5],
       this.initialStepIndex = 1,
       this.initialPolygon = const [],
-      this.enableFreeDraw = true})
+      this.enableFreeDraw = true,
+      this.mapStrings,
+      this.placeAutoCompleteLanguage})
       : super(key: key);
 
   @override
@@ -68,7 +75,9 @@ class AreaPickerScreen extends StatefulWidget {
       distanceSteps: distanceSteps,
       initialStepIndex: initialStepIndex,
       initialPolygon: initialPolygon,
-      enableFreeDraw: enableFreeDraw);
+      enableFreeDraw: enableFreeDraw,
+      mapStrings: mapStrings,
+      placeAutoCompleteLanguage: placeAutoCompleteLanguage);
 }
 
 class _AreaPickerScreenState extends State<AreaPickerScreen> {
@@ -83,6 +92,9 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
   final List<LatLng> initialPolygon;
   final bool enableFreeDraw;
 
+  MapPickerStrings strings;
+  String placeAutoCompleteLanguage;
+
   _AreaPickerScreenState(
       {@required this.markerAsset,
       @required this.mainColor,
@@ -92,7 +104,9 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
       @required this.distanceSteps,
       @required this.zoomSteps,
       @required this.initialPolygon,
-      @required this.enableFreeDraw}) {
+      @required this.enableFreeDraw,
+      @required mapStrings,
+      @required placeAutoCompleteLanguage}) {
     centerCamera = LatLng(initialPosition.latitude, initialPosition.longitude);
     zoomCamera = zoomSteps[initialStepIndex];
     selectedLatLng =
@@ -101,6 +115,9 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
     polygonPoints = initialPolygon;
 
     _places = GoogleMapsPlaces(apiKey: googlePlacesApiKey);
+
+    this.strings = mapStrings ?? MapPickerStrings.english();
+    this.placeAutoCompleteLanguage = 'en';
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -279,7 +296,8 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
             ),
             Padding(
               padding: EdgeInsets.only(left: 32, bottom: 16),
-              child: Text('A menos de ${radiusInMeters ~/ 1000} km de ti'),
+              child: Text(strings.distanceInKmFromYou
+                  .replaceAll("\$", "${radiusInMeters ~/ 1000}")),
             )
           ],
         ),
@@ -300,7 +318,7 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
             ),
             child: ListTile(
               leading: Icon(Icons.mode_edit),
-              title: Text("Dibuja un área en el mapa para buscar"),
+              title: Text(strings.drawAreaOnMap),
             ),
           ),
         );
@@ -317,9 +335,9 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
             color: Colors.white,
           ),
           child: ListTile(
-            title: Text("Área personalizada"),
+            title: Text(strings.customArea),
             trailing: FlatButton(
-              child: Text("Eliminar"),
+              child: Text(strings.delete),
               onPressed: () {
                 _removeCustomArea();
               },
@@ -344,7 +362,7 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
           context: context,
           apiKey: googlePlacesApiKey,
           mode: Mode.fullscreen,
-          language: "es",
+          language: placeAutoCompleteLanguage,
           location: myLocation != null
               ? Location(myLocation.latitude, myLocation.longitude)
               : null);
@@ -488,7 +506,7 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
                                     Navigator.pop(context);
                                   }
                                 : null,
-                            child: Text("Cancelar"),
+                            child: Text(strings.cancel),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(18.0),
                                 side: BorderSide(
@@ -509,7 +527,7 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
                                   }
                                 : null,
                             child: Text(
-                              "Guardar zona",
+                              strings.saveArea,
                               style: TextStyle(color: Colors.white),
                             ),
                             color: mainColor,
