@@ -15,7 +15,7 @@
         android:label="mappickerexample"
         android:icon="@mipmap/ic_launcher">
         <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="YOUR_API_KEY"/> <!-- todo-->
+            android:value="@string/google_maps_api_key"/> <!-- todo-->
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
