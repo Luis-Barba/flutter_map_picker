@@ -312,7 +312,7 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
           child: Container(
             margin: EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.cyan, width: 2),
+              border: Border.all(color: mainColor, width: 2),
               borderRadius: BorderRadius.circular(8),
               color: Colors.white,
             ),
@@ -330,7 +330,7 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.cyan, width: 2),
+            border: Border.all(color: mainColor, width: 2),
             borderRadius: BorderRadius.circular(8),
             color: Colors.white,
           ),
