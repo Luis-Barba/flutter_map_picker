@@ -12,11 +12,16 @@ Follow the steps to integrate Google Maps (https://pub.dev/packages/google_maps_
 AreaPickerResult pickerResult = await Navigator.push(context, MaterialPageRoute(builder: (context) =>  AreaPickerScreen(
         googlePlacesApiKey: GOOGLE_PLACES_API_KEY,
         initialPosition: DEFAULT_LAT_LNG,
-        mainColor: Colors.cyan,
+        mainColor: Colors.purple,
+        mapStrings: MapPickerStrings.spanish(),
+        placeAutoCompleteLanguage: 'es',
         markerAsset: 'assets/images/icon_look_area.png',
-        enableFreeDraw: true,
       )));
 ```
+
+![Screenshot](screenshots/pick_area_1.gif)
+
+![Screenshot](screenshots/pick_area_2.gif)
 
 ### Pick address
 
@@ -24,6 +29,13 @@ AreaPickerResult pickerResult = await Navigator.push(context, MaterialPageRoute(
 PlacePickerResult pickerResult = await Navigator.push(context, MaterialPageRoute(builder: (context) =>  PlacePickerScreen(
         googlePlacesApiKey: GOOGLE_PLACES_API_KEY,
         initialPosition: DEFAULT_LAT_LNG,
-        mainColor: Colors.cyan,
+        mainColor: Colors.purple,
+        mapStrings: MapPickerStrings.spanish(),
+        placeAutoCompleteLanguage: 'es',
       )));
 ```
+
+![Screenshot](screenshots/pick_place_1.gif)
+
+![Screenshot](screenshots/pick_place_2.gif)
+
