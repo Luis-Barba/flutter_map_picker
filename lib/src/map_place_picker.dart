@@ -26,16 +26,23 @@ class PlacePickerScreen extends StatefulWidget {
   final String googlePlacesApiKey;
   final LatLng initialPosition;
   final Color mainColor;
-
+  final bool isSearchEnabled;
   final MapPickerStrings mapStrings;
   final String placeAutoCompleteLanguage;
+  final bool canCancel;
+  final bool zoomControlsEnabled;
+  final Color textColor;
 
   const PlacePickerScreen(
       {Key key,
       @required this.googlePlacesApiKey,
       @required this.initialPosition,
       @required this.mainColor,
+      this.isSearchEnabled = true,
+      this.canCancel = true,
       this.mapStrings,
+      this.zoomControlsEnabled = true,
+      this.textColor = Colors.black,
       this.placeAutoCompleteLanguage})
       : super(key: key);
 
@@ -187,8 +194,10 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
       return Padding(
         padding: EdgeInsets.only(top: 40, left: 8, right: 8),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
-            FloatingActionButton(
+            widget.isSearchEnabled ? 
+              FloatingActionButton(
               heroTag: "FAB_SEARCH_PLACE",
               backgroundColor: Colors.white,
               child: Icon(
@@ -198,7 +207,7 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
               onPressed: () {
                 _searchPlace();
               },
-            ),
+            ) : Container(),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 8),
               child: FloatingActionButton(
@@ -233,6 +242,7 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
                   ),
                   myLocationEnabled: true,
                   myLocationButtonEnabled: false,
+                  zoomControlsEnabled: widget.zoomControlsEnabled,
                   onMapCreated: (GoogleMapController controller) {
                     googleMapController = controller;
                   },
@@ -292,10 +302,10 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
                 Container(
                   padding: EdgeInsets.only(top: 8, bottom: 8),
                   child: ListTile(
-                    title: Text(strings.address),
+                    title: Text(strings.address,style: TextStyle(color: widget.textColor),),
                     subtitle: selectedAddress == null
-                        ? Text(strings.firstMessageSelectAddress)
-                        : Text(selectedAddress),
+                        ? Text(strings.firstMessageSelectAddress, style : TextStyle(color: widget.textColor))
+                        : Text(selectedAddress, style : TextStyle(color: widget.textColor)),
                     trailing: loadingAddress
                         ? CircularProgressIndicator(
                             backgroundColor: mainColor,
@@ -307,19 +317,19 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
                   padding: EdgeInsets.fromLTRB(8, 0, 8, 8),
                   child: Row(
                     children: <Widget>[
-                      Container(
+                      widget.canCancel ? Container(
                         width: 160,
                         padding: EdgeInsets.only(right: 16),
                         child: FlatButton(
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          child: Text(strings.cancel),
+                          child: Text(strings.cancel, style : TextStyle(color: widget.textColor)),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0),
                               side: BorderSide(color: mainColor)),
                         ),
-                      ),
+                      ) : Container(),
                       Expanded(
                         child: FlatButton(
                           onPressed: !movingCamera &&
@@ -335,7 +345,7 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
                               : null,
                           child: Text(
                             strings.selectAddress,
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: widget.textColor),
                           ),
                           color: mainColor,
                           disabledColor: Colors.grey[350],
