@@ -75,7 +75,7 @@ class MapPickerStrings {
       distanceInKmFromYou = 'Moins de \$ km de vous',
       drawAreaOnMap = "Dessinez une zone sur la carte pour rechercher",
       customArea = "Zone personnalisée",
-      address = "Addresse",
+      address = "Adresse",
       firstMessageSelectAddress =
           "Glissez la carte pour selectionner une adresse ou clickez sur rechercher"}) {
     return MapPickerStrings(
