@@ -66,4 +66,28 @@ class MapPickerStrings {
       firstMessageSelectAddress: firstMessageSelectAddress,
     );
   }
+  
+  factory MapPickerStrings.french(
+      {selectAddress = "Selectionner cette adresse",
+      saveArea = "Sauvegarder la zone",
+      cancel = "Annuler",
+      delete = "Supprimer",
+      distanceInKmFromYou = 'Moins de \$ km de vous',
+      drawAreaOnMap = "Dessinez une zone sur la carte pour rechercher",
+      customArea = "Zone personnalisée",
+      address = "Addresse",
+      firstMessageSelectAddress =
+          "Glissez la carte pour selectionner une adresse ou clickez sur rechercher"}) {
+    return MapPickerStrings(
+      selectAddress: selectAddress,
+      saveArea: saveArea,
+      cancel: cancel,
+      delete: delete,
+      distanceInKmFromYou: distanceInKmFromYou,
+      drawAreaOnMap: drawAreaOnMap,
+      customArea: customArea,
+      address: address,
+      firstMessageSelectAddress: firstMessageSelectAddress,
+    );
+  }
 }
