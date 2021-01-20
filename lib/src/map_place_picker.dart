@@ -188,17 +188,6 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
         padding: EdgeInsets.only(top: 40, left: 8, right: 8),
         child: Column(
           children: <Widget>[
-            FloatingActionButton(
-              heroTag: "FAB_SEARCH_PLACE",
-              backgroundColor: Colors.white,
-              child: Icon(
-                Icons.search,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                _searchPlace();
-              },
-            ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 8),
               child: FloatingActionButton(
